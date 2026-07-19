@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# MDE
+.mde/**
+!**/.mde/
+!**/.mde/project.yaml
+data/
+vault/
+logs/
+
+# Android
+android/.gradle/
+android/**/build/
+
+# Environment and editors
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
