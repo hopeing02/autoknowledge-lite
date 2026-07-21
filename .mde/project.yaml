@@ -10,7 +10,7 @@ repository:
 commands:
   test:
     - "uv run --extra test pytest"
-    - "android\\gradlew.bat testDebugUnitTest"
+    - "android\\gradlew.bat -p android testDebugUnitTest"
   build:
     - "uv build"
     - "android\\gradlew.bat assembleDebug"
