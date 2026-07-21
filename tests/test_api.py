@@ -6,7 +6,7 @@ from uuid import UUID
 
 from fastapi.testclient import TestClient
 
-from autoknowledge_lite.ai import AnalysisError
+from autoknowledge_lite.ai import AnalysisError, DeterministicKnowledgeAnalyzer
 from autoknowledge_lite.api import create_app
 from autoknowledge_lite.models import ShareRecord
 from autoknowledge_lite.obsidian import ObsidianNoteStore
@@ -17,6 +17,7 @@ def client_for(tmp_path: Path) -> TestClient:
     return TestClient(
         create_app(
             JsonShareStore(tmp_path / "jobs"),
+            analyzer=DeterministicKnowledgeAnalyzer(),
             auto_process=False,
             note_store=ObsidianNoteStore(tmp_path / "vault"),
         )
@@ -162,7 +163,9 @@ def test_markdown_renders_and_persists_analyzed_job(tmp_path: Path) -> None:
     markdown = response.json()["markdown"]
     assert markdown.startswith("---\n")
     assert "# Knowledge Note" in markdown
+    assert "## Summary" in markdown
     assert "## Key Points" in markdown
+    assert "## Original Content\n\nFirst point. Second point." in markdown
     stored = json.loads(
         (tmp_path / "jobs" / f"{accepted['job_id']}.json").read_text(encoding="utf-8")
     )
@@ -196,6 +199,7 @@ def test_share_automatically_analyzes_and_renders_markdown(tmp_path: Path) -> No
     client = TestClient(
         create_app(
             store,
+            analyzer=DeterministicKnowledgeAnalyzer(),
             auto_process=True,
             note_store=ObsidianNoteStore(tmp_path / "vault"),
             git_sync=git_sync,
@@ -230,6 +234,7 @@ def test_share_fetches_url_only_content_before_automatic_analysis(
     client = TestClient(
         create_app(
             store,
+            analyzer=DeterministicKnowledgeAnalyzer(),
             auto_process=True,
             content_fetcher=FakeFetcher(),
             note_store=ObsidianNoteStore(tmp_path / "vault"),
