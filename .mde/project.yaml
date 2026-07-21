@@ -13,7 +13,7 @@ commands:
     - "android\\gradlew.bat -p android testDebugUnitTest"
   build:
     - "uv build"
-    - "android\\gradlew.bat assembleDebug"
+    - "android\\gradlew.bat -p android assembleDebug"
 pull_request:
   required: true
   approvals_required: 1
