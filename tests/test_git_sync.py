@@ -33,7 +33,7 @@ def test_sync_pulls_commits_and_pushes_only_requested_note(
 
     operations = [command[3:] for command in commands]
     assert operations == [
-        ["pull", "--rebase", "origin", "main"],
+        ["pull", "--rebase", "--autostash", "origin", "main"],
         ["add", "--", "AutoKnowledge/note.md"],
         ["diff", "--cached", "--quiet"],
         ["commit", "-m", "knowledge: add note"],

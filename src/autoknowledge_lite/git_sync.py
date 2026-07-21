@@ -54,7 +54,7 @@ class GitNoteSync:
             raise GitSyncError("The configured Vault is not a Git repository.")
 
         with self._lock:
-            self._run("pull", "--rebase", "origin", self.branch)
+            self._run("pull", "--rebase", "--autostash", "origin", self.branch)
             self._run("add", "--", relative_note.as_posix())
             changed = self._run("diff", "--cached", "--quiet", check=False)
             if changed.returncode == 0:
