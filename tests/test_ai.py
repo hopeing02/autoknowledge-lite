@@ -65,6 +65,27 @@ def test_claude_analyzer_uses_messages_api() -> None:
 
 def test_provider_selection_defaults_to_local(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("AUTOKNOWLEDGE_AI_PROVIDER", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
+    assert isinstance(analyzer_from_environment(), DeterministicKnowledgeAnalyzer)
+
+
+def test_provider_selection_prefers_openai_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("AUTOKNOWLEDGE_AI_PROVIDER", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+
+    assert isinstance(analyzer_from_environment(), OpenAIKnowledgeAnalyzer)
+
+
+def test_explicit_local_provider_overrides_available_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTOKNOWLEDGE_AI_PROVIDER", "local")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
     assert isinstance(analyzer_from_environment(), DeterministicKnowledgeAnalyzer)
 

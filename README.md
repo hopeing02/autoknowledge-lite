@@ -1,5 +1,17 @@
 # autoknowledge-lite
 
+## AI provider selection
+
+Set `AUTOKNOWLEDGE_AI_PROVIDER` to `openai`, `claude`, or `local`. When it is
+not set, the server selects OpenAI when `OPENAI_API_KEY` exists, then Claude
+when `ANTHROPIC_API_KEY` exists, and otherwise uses the offline deterministic
+analyzer. Generated Markdown always contains both the AI summary and the full
+original content.
+
+```powershell
+$env:AUTOKNOWLEDGE_AI_PROVIDER = "openai"
+```
+
 ## GitHub automatic synchronization
 
 The local Vault can be connected to a private GitHub repository. After the

@@ -143,9 +143,10 @@ class ClaudeKnowledgeAnalyzer:
 
 
 def analyzer_from_environment() -> KnowledgeAnalyzer:
-    """Build the analyzer selected by AUTOKNOWLEDGE_AI_PROVIDER."""
+    """Build the configured analyzer, preferring an available API key."""
 
-    provider = os.getenv("AUTOKNOWLEDGE_AI_PROVIDER", "local").strip().lower()
+    configured = os.getenv("AUTOKNOWLEDGE_AI_PROVIDER")
+    provider = configured.strip().lower() if configured else _provider_from_api_keys()
     if provider == "local":
         return DeterministicKnowledgeAnalyzer()
     if provider == "openai":
@@ -153,6 +154,14 @@ def analyzer_from_environment() -> KnowledgeAnalyzer:
     if provider in {"anthropic", "claude"}:
         return ClaudeKnowledgeAnalyzer()
     raise AnalysisError(f"Unsupported AI provider: {provider}")
+
+
+def _provider_from_api_keys() -> str:
+    if os.getenv("OPENAI_API_KEY"):
+        return "openai"
+    if os.getenv("ANTHROPIC_API_KEY"):
+        return "claude"
+    return "local"
 
 
 def _content_prompt(record: ShareRecord) -> str:

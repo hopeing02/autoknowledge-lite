@@ -30,7 +30,10 @@ def render_markdown(record: ShareRecord) -> str:
         f"{tags}\n"
         "---\n\n"
         f"# {title}\n\n"
+        "## Summary\n\n"
         f"{record.analysis.summary}\n\n"
         "## Key Points\n\n"
-        f"{points}\n"
+        f"{points}\n\n"
+        "## Original Content\n\n"
+        f"{record.content.rstrip()}\n"
     )
