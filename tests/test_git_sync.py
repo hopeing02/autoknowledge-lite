@@ -23,6 +23,8 @@ def test_sync_pulls_commits_and_pushes_only_requested_note(
     commands: list[list[str]] = []
 
     def fake_run(command: list[str], **kwargs) -> subprocess.CompletedProcess[str]:
+        assert kwargs["encoding"] == "utf-8"
+        assert kwargs["errors"] == "replace"
         commands.append(command)
         return_code = 1 if "diff" in command else 0
         return subprocess.CompletedProcess(command, return_code, "", "")

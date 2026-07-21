@@ -81,7 +81,8 @@ class GitNoteSync:
                 cwd=self.repo_dir,
                 capture_output=True,
                 check=check,
-                text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=60,
             )
         except (OSError, subprocess.SubprocessError) as error:
